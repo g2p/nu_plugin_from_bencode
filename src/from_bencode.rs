@@ -2,15 +2,9 @@ use nu_errors::ShellError;
 use nu_protocol::{Primitive, ReturnSuccess, ReturnValue, TaggedDictBuilder, UntaggedValue, Value};
 use nu_source::Tag;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct FromBencode {
     pub buffer: Vec<u8>,
-}
-
-impl Default for FromBencode {
-    fn default() -> Self {
-        Self { buffer: Vec::new() }
-    }
 }
 
 fn convert_bencode_value_to_nu_value<T>(
@@ -70,24 +64,21 @@ where
     })
 }
 
-pub fn from_bencode_bytes_to_value<T>(
-    bytes: Vec<u8>,
-    tag: T,
-) -> Result<Vec<ReturnValue>, ShellError>
+pub fn from_bytes_to_value<T>(bytes: &[u8], tag: T) -> Result<Vec<ReturnValue>, ShellError>
 where
     T: Into<Tag>,
 {
+    use bt_bencode::read::Read;
+    use serde::de::Deserialize;
+
     let mut values: Vec<bt_bencode::Value> = Vec::new();
 
     let reader = std::rc::Rc::new(std::cell::RefCell::new(bt_bencode::read::SliceRead::new(
-        &bytes[..],
+        bytes,
     )));
 
     loop {
         let mut de = bt_bencode::Deserializer::new(crate::read::SliceReadView::new(reader.clone()));
-
-        use bt_bencode::read::Read;
-        use serde::de::Deserialize;
 
         match bt_bencode::Value::deserialize(&mut de) {
             Ok(value) => {
@@ -111,10 +102,10 @@ where
     }
 
     let tag = tag.into();
-    Ok(values
+    values
         .into_iter()
         .map(|v| convert_bencode_value_to_nu_value(v, tag.clone()).map(ReturnSuccess::value))
-        .collect::<Result<Vec<ReturnValue>, ShellError>>()?)
+        .collect::<Result<Vec<ReturnValue>, ShellError>>()
 }
 
 #[cfg(test)]
@@ -127,17 +118,17 @@ mod tests {
         bencode_bytes.extend_from_slice(&bt_bencode::to_vec(&bt_bencode::Value::from(
             "hello world",
         ))?);
-        bencode_bytes.extend_from_slice(&bt_bencode::to_vec(&bt_bencode::Value::from(128))?);
+        bencode_bytes.extend_from_slice(&bt_bencode::to_vec(&bt_bencode::Value::from(128u64))?);
 
         assert_eq!(bencode_bytes.len(), 19, "{:?}", bencode_bytes);
 
-        let nu_value = from_bencode_bytes_to_value(bencode_bytes, Tag::unknown());
+        let nu_value = from_bytes_to_value(&bencode_bytes, Tag::unknown());
         match nu_value {
             Ok(values) => {
                 assert_eq!(values.len(), 2);
                 let expected = vec![
                     Some(Value::from("hello world")),
-                    Some(UntaggedValue::int(128).into_value(&Tag::unknown())),
+                    Some(UntaggedValue::int(128u64).into_value(&Tag::unknown())),
                     None,
                 ];
                 for (actual, expected) in values.into_iter().zip(expected.into_iter()) {

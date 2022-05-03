@@ -35,6 +35,6 @@ impl Plugin for FromBencode {
     fn end_filter(&mut self) -> Result<Vec<ReturnValue>, ShellError> {
         let mut buffer = Vec::new();
         std::mem::swap(&mut self.buffer, &mut buffer);
-        crate::from_bencode::from_bencode_bytes_to_value(buffer, Tag::unknown())
+        crate::from_bencode::from_bytes_to_value(&buffer, Tag::unknown())
     }
 }

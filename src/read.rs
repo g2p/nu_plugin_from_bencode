@@ -10,7 +10,7 @@ impl<'a> SliceReadView<'a> {
     }
 }
 
-impl<'a> bt_bencode::read::Read<'a> for SliceReadView<'a> {
+impl<'a> bt_bencode::read::Read for SliceReadView<'a> {
     #[inline]
     fn next(&mut self) -> Option<Result<u8, bt_bencode::Error>> {
         self.reader.borrow_mut().next()

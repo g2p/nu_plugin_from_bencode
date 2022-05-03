@@ -2,12 +2,12 @@
 name = "nu_plugin_from_bencode"
 version = "0.1.0"
 authors = ["Bryant Luk <code@bryantluk.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 nu-plugin = "~0"
 nu-protocol = "~0"
 nu-source = "~0"
 nu-errors = "~0"
-bt_bencode = "0.3.0"
+bt_bencode = "0.6.0"
 serde = { version = "1", default-features = false }
