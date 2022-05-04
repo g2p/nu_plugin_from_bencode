@@ -1,8 +1,6 @@
 name: Rust Security Audit
 
 on:
-  schedule:
-    - cron: '0 0 * * 6'
   push:
     paths:
       - '**/Cargo.toml'
@@ -11,9 +9,4 @@ on:
 
 jobs:
   audit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+    uses: bluk/actions-workflows/.github/workflows/rust-audit.yml@a556bfbdc9cfffd3255a0ea6b0379f23e93b05ab

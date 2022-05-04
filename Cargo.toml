@@ -1,13 +1,25 @@
 [package]
 name = "nu_plugin_from_bencode"
-version = "0.1.0"
+version = "0.2.0"
+license = "MIT OR Apache-2.0"
 authors = ["Bryant Luk <code@bryantluk.com>"]
 edition = "2021"
+description = "A Nushell plugin to convert bencode data into Nu structured values."
+keywords = ["bittorrent", "torrent", "nu", "nushell", "bencode"]
+categories = ["encoding"]
+repository = "https://github.com/bluk/nu_plugin_from_bencode"
+documentation = "https://docs.rs/nu_plugin_from_bencode/"
+readme = "README.md"
+include = [
+  "src/**/*.rs",
+  "Cargo.toml",
+  "README.md",
+  "LICENSE-APACHE",
+  "LICENSE-MIT",
+]
 
 [dependencies]
-nu-plugin = "~0"
-nu-protocol = "~0"
-nu-source = "~0"
-nu-errors = "~0"
-bt_bencode = "0.6.0"
-serde = { version = "1", default-features = false }
+nu-plugin = "0.62"
+nu-protocol = "0.62"
+indexmap = "1.8.1"
+bt_bencode = { version = "0.6.0", default-features = false, features = ["alloc"] }
