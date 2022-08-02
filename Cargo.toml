@@ -1,6 +1,6 @@
 [package]
 name = "nu_plugin_from_bencode"
-version = "0.2.0"
+version = "0.3.0"
 license = "MIT OR Apache-2.0"
 authors = ["Bryant Luk <code@bryantluk.com>"]
 edition = "2021"
@@ -19,7 +19,7 @@ include = [
 ]
 
 [dependencies]
-nu-plugin = "0.64"
-nu-protocol = "0.64"
+nu-plugin = "0.66"
+nu-protocol = "0.66"
 indexmap = "1.8.1"
-bt_bencode = { version = "0.6", default-features = false, features = ["alloc"] }
+bt_bencode = { version = "0.7", default-features = false, features = ["alloc"] }
