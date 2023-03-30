@@ -35,7 +35,13 @@ fn convert_bencode_to_value(value: bt_bencode::Value, span: Span) -> Result<Valu
             bt_bencode::value::Number::Unsigned(unsigned_num) => i64::try_from(unsigned_num)
                 .map(|val| Value::Int { val, span })
                 .map_err(|_| {
-                    ShellError::UnsupportedInput("expected a compatible number".into(), span)
+                    ShellError::UnsupportedInput(
+                        "expected a compatible number".into(),
+                        format!("{unsigned_num}"),
+                        span,
+                        // TODO: The span is not correct, but there isn't a way to get the span of a value today.
+                        span,
+                    )
                 })?,
         },
         bt_bencode::Value::ByteStr(byte_str) => match String::from_utf8(byte_str.into_vec()) {
@@ -62,6 +68,9 @@ fn convert_bencode_to_value(value: bt_bencode::Value, span: Span) -> Result<Valu
                 let key = String::from_utf8(key.into_vec()).map_err(|e| {
                     ShellError::UnsupportedInput(
                         format!("Unexpected bencode data {:?}:{:?}", e.into_bytes(), value),
+                        "key is not a UTF-8 string".into(),
+                        span,
+                        // TODO: The span is not correct, but there isn't a way to get the span of a value today.
                         span,
                     )
                 })?;
@@ -79,11 +88,14 @@ fn convert_bencode_to_value(value: bt_bencode::Value, span: Span) -> Result<Valu
 /// # Errors
 ///
 /// Returns an error if the input is not valid bencode data.
-pub fn from_bytes_to_value(bytes: &[u8], span: Span) -> Result<Value, ShellError> {
-    let value = bt_bencode::from_slice(bytes).map_err(|_e| {
-        ShellError::CantConvert("bencode data".into(), "binary".into(), span, None)
+pub fn from_bytes_to_value(input: &[u8], head: Span) -> Result<Value, ShellError> {
+    let value = bt_bencode::from_slice(input).map_err(|_e| ShellError::CantConvert {
+        to_type: "bencode data".into(),
+        from_type: "binary".into(),
+        span: head,
+        help: None,
     })?;
-    convert_bencode_to_value(value, span)
+    convert_bencode_to_value(value, head)
 }
 
 #[cfg(test)]
@@ -93,7 +105,7 @@ mod tests {
     #[test]
     fn simple_decode() -> Result<(), bt_bencode::Error> {
         let bencode_bytes = bt_bencode::to_vec(&bt_bencode::Value::from("hello world"))?;
-        assert_eq!(bencode_bytes.len(), 14, "{:?}", bencode_bytes);
+        assert_eq!(bencode_bytes.len(), 14, "{bencode_bytes:?}");
 
         let span = Span::new(0, bencode_bytes.len());
         let nu_value = from_bytes_to_value(&bencode_bytes, span).unwrap();
