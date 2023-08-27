@@ -2,7 +2,7 @@
 
 A converter plugin from the [bencode][bep_0003] format for [Nushell][nushell].
 
-The plugin was last tested on nushell version `0.77.1`.
+The plugin was last tested on nushell version `0.84`.
 
 The plugin is unstable as the interface `Nu` for plugins is unstable.
 
@@ -18,7 +18,7 @@ cargo install nu_plugin_from_bencode
 [Register][nushell_register] the plugin:
 
 ```sh
-register --encoding=json <path to plugin>/nu_plugin_from_bencode
+register <path to plugin>/nu_plugin_from_bencode
 ```
 
 By default, cargo installs to `$HOME/.cargo/bin` on Unix systems.
