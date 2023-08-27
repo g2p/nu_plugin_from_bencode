@@ -19,7 +19,7 @@ include = [
 ]
 
 [dependencies]
-nu-plugin = "0.78"
-nu-protocol = "0.78"
-indexmap = "1.8.1"
+nu-plugin = "0.84"
+nu-protocol = "0.84"
+indexmap = "2"
 bt_bencode = { version = "0.7", default-features = false, features = ["alloc"] }
