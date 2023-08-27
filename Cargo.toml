@@ -17,6 +17,7 @@ include = [
   "LICENSE-APACHE",
   "LICENSE-MIT",
 ]
+rust-version = "1.65.0"
 
 [dependencies]
 nu-plugin = "0.84"
