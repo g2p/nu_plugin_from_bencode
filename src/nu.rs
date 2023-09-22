@@ -36,7 +36,9 @@ fn from_bencode(call: &EvaluatedCall, input: &Value) -> Result<Value, LabeledErr
     let binary_input = input.as_binary()?;
 
     if binary_input.is_empty() {
-        return Ok(Value::Nothing { span: head });
+        return Ok(Value::Nothing {
+            internal_span: head,
+        });
     }
 
     Ok(from_bytes_to_value(binary_input, head)?)
