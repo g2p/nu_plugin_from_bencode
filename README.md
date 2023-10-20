@@ -2,7 +2,7 @@
 
 A converter plugin from the [bencode][bep_0003] format for [Nushell][nushell].
 
-The plugin was last tested on nushell version `0.85.0`.
+The plugin was last tested on nushell version `0.86.0`.
 
 The plugin is unstable as the interface `Nu` for plugins is unstable.
 
