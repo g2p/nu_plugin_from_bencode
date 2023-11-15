@@ -26,13 +26,13 @@ fn convert_bencode_to_value(
             bt_bencode::value::Number::Unsigned(unsigned_num) => i64::try_from(unsigned_num)
                 .map(|val| Value::Int { val, internal_span })
                 .map_err(|_| {
-                    ShellError::UnsupportedInput(
-                        "expected a compatible number".into(),
-                        format!("{unsigned_num}"),
-                        internal_span,
+                    ShellError::UnsupportedInput {
+                        msg: "expected a compatible number".into(),
+                        input: format!("{unsigned_num}"),
+                        msg_span: internal_span,
                         // TODO: The span is not correct, but there isn't a way to get the span of a value today.
-                        internal_span,
-                    )
+                        input_span: internal_span,
+                    }
                 })?,
         },
         bt_bencode::Value::ByteStr(byte_str) => match String::from_utf8(byte_str.into_vec()) {
@@ -49,13 +49,13 @@ fn convert_bencode_to_value(
             let mut record = Record::new();
             for (key, value) in dict {
                 let key = String::from_utf8(key.into_vec()).map_err(|e| {
-                    ShellError::UnsupportedInput(
-                        format!("Unexpected bencode data {:?}:{:?}", e.into_bytes(), value),
-                        "key is not a UTF-8 string".into(),
-                        internal_span,
+                    ShellError::UnsupportedInput {
+                        msg: format!("Unexpected bencode data {:?}:{:?}", e.into_bytes(), value),
+                        input: "key is not a UTF-8 string".into(),
+                        msg_span: internal_span,
                         // TODO: The span is not correct, but there isn't a way to get the span of a value today.
-                        internal_span,
-                    )
+                        input_span: internal_span,
+                    }
                 })?;
                 let value = convert_bencode_to_value(value, internal_span)?;
                 record.push(key, value);
