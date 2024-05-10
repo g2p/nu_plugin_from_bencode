@@ -21,6 +21,6 @@ include = [
 rust-version = "1.70.0"
 
 [dependencies]
-nu-plugin = "0.91"
-nu-protocol = "0.91"
+nu-plugin = "0.93"
+nu-protocol = "0.93"
 bt_bencode = { version = "0.8", default-features = false, features = ["alloc"] }
