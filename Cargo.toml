@@ -18,9 +18,9 @@ include = [
     "LICENSE-APACHE",
     "LICENSE-MIT",
 ]
-rust-version = "1.70.0"
+rust-version = "1.72.1"
 
 [dependencies]
-nu-plugin = "0.90"
-nu-protocol = "0.90"
+nu-plugin = "0.93"
+nu-protocol = "0.93"
 bt_bencode = { version = "0.8", default-features = false, features = ["alloc"] }

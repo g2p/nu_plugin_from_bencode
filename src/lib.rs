@@ -8,13 +8,20 @@
     unused_qualifications
 )]
 
+use nu_plugin::Plugin;
 use nu_protocol::{Record, ShellError, Span, Value};
 
 mod nu;
 
 /// Converts bencode data to Nu structured values.
 #[derive(Debug, Default)]
-pub struct FromBencode;
+pub struct FromBencodePlugin;
+
+impl Plugin for FromBencodePlugin {
+    fn commands(&self) -> Vec<Box<dyn nu_plugin::PluginCommand<Plugin = Self>>> {
+        vec![Box::new(nu::FromBencodeCommand)]
+    }
+}
 
 fn convert_bencode_to_value(
     value: bt_bencode::Value,
