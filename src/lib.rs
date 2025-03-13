@@ -21,6 +21,10 @@ impl Plugin for FromBencodePlugin {
     fn commands(&self) -> Vec<Box<dyn nu_plugin::PluginCommand<Plugin = Self>>> {
         vec![Box::new(nu::FromBencodeCommand)]
     }
+
+    fn version(&self) -> String {
+        env!("CARGO_PKG_VERSION").into()
+    }
 }
 
 fn convert_bencode_to_value(
