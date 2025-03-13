@@ -11,7 +11,7 @@ impl SimplePluginCommand for FromBencodeCommand {
         "from bencode"
     }
 
-    fn usage(&self) -> &str {
+    fn description(&self) -> &str {
         "Parse data as bencode and create table."
     }
 
